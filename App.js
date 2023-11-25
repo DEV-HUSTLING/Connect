@@ -7,6 +7,8 @@ import StartUp from './screens/StartUp';
 import Login from './screens/Login';
 import QrCode from './screens/QrCode';
 import ChatList from './screens/ChatList';
+import Register from './screens/Register';
+import MessageText from './screens/MessageText';
 
 const Stack = createStackNavigator(); // Corrected function name
 
@@ -16,15 +18,11 @@ export default function App() {
       <Stack.Navigator screenOptions={{  cardStyle: { backgroundColor: 'transparent' } }}>
         <Stack.Screen options={{headerShown: false}} name="StartUp" component={StartUp} />
         <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="Profile" component={QrCode} />
+        <Stack.Screen name="Register" component={Register} />
+        <Stack.Screen name="MessageText" component={MessageText} />
+        {/* <Stack.Screen name="Profile" component={QrCode} /> */}
         <Stack.Screen name="ChatList" 
-        options={{
-          title: "Chats",
-          headerTitleStyle:{
-             fontWeight:'bold',
-          },
-          headerLeft: null,
-        }}
+      options={{headerShown: false}}
         component={ChatList} />
 
       </Stack.Navigator>

@@ -3,15 +3,16 @@ import React,{useState} from 'react'
 import { useWindowDimensions } from 'react-native';
 import QrCode from './QrCode';
 import { FIREBASE_AUTH } from '../FirebaseConfig';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { updateProfile } from 'firebase/auth';
+import {FIREBASE_DB} from '../FirebaseConfig';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { updateProfile,UserCredential } from 'firebase/auth';
+import { doc, setDoc } from 'firebase/firestore';
 
-const Login = ({navigation}) => {
-   
+const Register = ({navigation}) => {
     const windowDimensions = useWindowDimensions()
+    const [username, setUsername] = useState('');
 const [email, setEmail] = useState('');
 const [password, setPassword] = useState('');
-// const [loading,setLoading] = useState(false);
 const auth = FIREBASE_AUTH;
     const styles = StyleSheet.create({
         container: {
@@ -47,15 +48,29 @@ const auth = FIREBASE_AUTH;
             alignItems: 'center'
         }
     })
- 
+
     const signIn = async()=>{
         try{
-            const response = await signInWithEmailAndPassword(auth,email,password);
+            const response = await createUserWithEmailAndPassword(auth,email,password);
+            await updateProfile(response.user, { displayName: username });
 
-            navigation.navigate('ChatList',{userE:response.user.email})
+            creatDBuserProfile(response);
+            navigation.navigate('Login')
+
         }
         catch(error){
             alert(error.message);
+        }
+    }
+    const creatDBuserProfile = async(response)=>{
+        try{
+            const dbDoc = await setDoc(doc(FIREBASE_DB,`users/${response.user.uid}`),{
+                username,
+                email: response.user.email,
+            });
+        }
+        catch(error){
+            console.log(error);
         }
     }
     return (
@@ -69,17 +84,15 @@ const auth = FIREBASE_AUTH;
             width: windowDimensions.width
 
             }}>
-            {/* <Image
-                style={styles.logo}
-                source={require('../assets/googleIcon.png')}
-            />
-            <Button
-                title="Google"
-                onPress={() => Alert.alert('Simple Button pressed')}
-            /> */}
 
-            <Text style={{marginTop:30, fontSize:30,backgroundColor:'lightgreen',padding:10}}>Sign In</Text>
+            <Text style={{marginTop:30, fontSize:30,backgroundColor:'yellow',padding:10,borderWidth:1,borderColor:'yellow',borderRadius:10}}>Sign Up</Text>
             <SafeAreaView style={{flex:1, alignItems:'center',marginTop:30}}>
+            <TextInput
+                    style={styles.input}
+                    onChangeText={(text)=>setUsername(text)}
+                    value={username}
+                    placeholder="username"
+                />
                 <TextInput
                     style={styles.input}
                     onChangeText={(text)=>setEmail(text)}
@@ -98,21 +111,14 @@ const auth = FIREBASE_AUTH;
                 >
                 
                 <Button
-                title="Login"
+                title="Submit"
                 color={'#FFFFFF'}
                 onPress={
                     () =>signIn()
                 }
             />
             </View>
-            <View style={styles.register}>
-                <Text>No Account?</Text>
-                <Button
-                    title='Register'
-                    onPress={()=>            navigation.navigate('Register')
-                }
-                />
-            </View>
+           
             </SafeAreaView>
             
             </View>
@@ -120,5 +126,4 @@ const auth = FIREBASE_AUTH;
     )
 }
 
-export default Login
-
+export default Register

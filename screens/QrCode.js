@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, Image, Button } from 'react-native'
 import React from 'react'
-import QRCode from 'react-native-qrcode-svg';
+// import QRCode from 'react-native-qrcode-svg';
 import {useWindowDimensions} from 'react-native';
 
 const QrCode = ({navigation}) => {
@@ -24,11 +24,11 @@ const QrCode = ({navigation}) => {
   return (
     <View style={styles.container}>
         <View style={styles.Qr}>
-      <QRCode
+      {/* <QRCode
       size={200}
       color={'#9747FF'}
       value="http://awesome.link.qr"
-    />
+    /> */}
     </View>
     <View style={styles.QrContent}>
         <View style={{display:'flex',flexDirection:'row',alignItems:'center',justifyContent:'space-evenly'}}>
