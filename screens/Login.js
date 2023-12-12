@@ -1,4 +1,6 @@
-import { StyleSheet, Text, View, Button, TextInput, SafeAreaView, Image, ActivityIndicator } from 'react-native'
+import {  KeyboardAvoidingView,
+    Platform,
+    StyleSheet, Text, View, Button, TextInput, SafeAreaView, Image, ActivityIndicator, TouchableOpacity } from 'react-native'
 import React,{useState} from 'react'
 import { useWindowDimensions } from 'react-native';
 import QrCode from './QrCode';
@@ -16,7 +18,7 @@ const auth = FIREBASE_AUTH;
     const styles = StyleSheet.create({
         container: {
             flexDirection: 'column',
-            backgroundColor: '#fff',
+            backgroundColor: '#9701FF',
             alignItems: 'center',
             alignContent: 'center',
             height: windowDimensions.height,
@@ -35,6 +37,7 @@ const auth = FIREBASE_AUTH;
             borderRadius: 20,
             borderColor: '#C2C2C2',
             padding: 10,
+            backgroundColor:'#fff'
         },
         logo: {
             width: 45,
@@ -44,7 +47,12 @@ const auth = FIREBASE_AUTH;
             display: 'flex',
             flexDirection: 'row',
             justifyContent: 'space-around',
-            alignItems: 'center'
+            alignItems: 'center',
+            // backgroundColor:'#fff',
+            paddingHorizontal:15,
+            marginTop:20,
+            fontWeight:'bold',
+            fontSize: 32
         }
     })
  
@@ -52,7 +60,7 @@ const auth = FIREBASE_AUTH;
         try{
             const response = await signInWithEmailAndPassword(auth,email,password);
 
-            navigation.navigate('ChatList',{userE:response.user.email})
+            navigation.navigate('ChatList',{userE:response.user.email,LgnuId:response.user.uid})
         }
         catch(error){
             alert(error.message);
@@ -62,7 +70,7 @@ const auth = FIREBASE_AUTH;
         <View style={styles.container}>
             <View style={{
             flexDirection: 'column',
-            backgroundColor: '#fff',
+            backgroundColor: '#9701FF',
             alignItems: 'center',
             marginTop:150,
             height: windowDimensions.height,
@@ -78,7 +86,10 @@ const auth = FIREBASE_AUTH;
                 onPress={() => Alert.alert('Simple Button pressed')}
             /> */}
 
-            <Text style={{marginTop:30, fontSize:30,backgroundColor:'lightgreen',padding:10}}>Sign In</Text>
+            <Text style={{marginTop:30, fontSize:30,fontWeight:'bold',color:'lightgreen',padding:10}}>Log In</Text>
+            <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={styles.container}>
             <SafeAreaView style={{flex:1, alignItems:'center',marginTop:30}}>
                 <TextInput
                     style={styles.input}
@@ -94,12 +105,12 @@ const auth = FIREBASE_AUTH;
                     placeholder="Password"
                 />
                 <View 
-                style={{backgroundColor:'#006ED6', width:80,borderRadius:'5',marginTop:50}}
+                style={{backgroundColor:'#fff', width:80,borderRadius:'50',marginTop:50}}
                 >
                 
                 <Button
                 title="Login"
-                color={'#FFFFFF'}
+                color={'green'}
                 onPress={
                     () =>signIn()
                 }
@@ -107,14 +118,16 @@ const auth = FIREBASE_AUTH;
             </View>
             <View style={styles.register}>
                 <Text>No Account?</Text>
-                <Button
-                    title='Register'
-                    onPress={()=>            navigation.navigate('Register')
+                <TouchableOpacity
+                    onPress={()=>            
+                    navigation.navigate('Register')
                 }
-                />
+                >
+                    <Text style={{color:'#fff',fontWeight:'bold'}} >Register</Text>
+                </TouchableOpacity>
             </View>
             </SafeAreaView>
-            
+            </KeyboardAvoidingView>
             </View>
         </View>
     )
